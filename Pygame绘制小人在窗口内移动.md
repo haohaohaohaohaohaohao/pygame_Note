@@ -46,15 +46,10 @@ class Block(pygame.sprite.Sprite):
 
 ```python
 class man(pygame.sprite.Sprite):
-    # 是否在移动的状态
-    moveup = False
-    movedown = False
-    moveleft = False
-    moveright = False
     # 移动速度
     movespeed = 5
 
-    def __init__(self, bgcolor, initial_pos):
+    def __init__(self, bgcolor, initial_pos, bound):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((100, 200))
         self.image.fill(bgcolor)
@@ -66,53 +61,33 @@ class man(pygame.sprite.Sprite):
         pygame.draw.line(self.image, BLACK, (50, 100), (100, 60), 2)
         self.rect = self.image.get_rect()
         self.rect.topleft = initial_pos
-    
-    # 方向和限定区域作为参数是，限定区域是一个四元元组，(left, top, width, height),表示一个矩形区域
-    def canMove(self, direction, bound):
-        if direction == left and self.rect.left - self.movespeed > bound[0]:
-            self.moveleft = True
-            return
-        elif direction == left and self.rect.left - self.movespeed <= bound[0]:
-            self.rect.left = bound[0] # 如果继续移动超过了区域，那么直接移动到边界
-            self.moveleft = False
-            return 
-        if direction == up and self.rect.top > bound[1]:
-            self.moveup = True
-            return
-        elif direction == up and self.rect.top - self.movespeed <= bound[1]:
-            self.rect.top = bound[1]
-            self.moveup = False
-            return     
-        if direction == down and self.rect.bottom < bound[3]:
-            self.movedown = True
-            return
-        elif direction == down and self.rect.bottom + self.movespeed >= bound[3]:
-            self.rect.bottom = bound[3]
-            self.movedown = False
-            return 
-        if direction == right and self.rect.right < bound[2]:
-            self.moveright = True
-        elif direction == right and self.rect.right + self.movespeed >= bound[0]:
-            self.rect.right = bound[2]
-            self.moveright = False
-            return 
-    
+        self.bound = bound
+        # 表示小人移动的范围，四元列表，分别表示左边界，右边界，上边界，下边界
+        
     # 移动函数
     def Moveleft(self):
-        if self.moveleft:
+        if  self.rect.left - self.movespeed >= self.bound[0]:
             self.rect.left -= self.movespeed
+        elif self.rect.left - self.movespeed < self.bound[0]:
+            self.rect.left = self.bound[0]
 
     def Moveright(self):
-        if self.moveright:
+        if self.rect.right + self.movespeed <= self.bound[1]:
             self.rect.right += self.movespeed
-
+        elif self.rect.right + self.movespeed > self.bound[1]:
+            self.rect.right = self.bound[1]
+            
     def Moveup(self):
-        if self.moveup:
+        if  self.rect.top - self.movespeed >= self.bound[2]:
             self.rect.top -= self.movespeed
+        elif self.rect.top - self.movespeed < self.bound[2]:
+            self.rect.top = self.bound[2]
 
     def Movedown(self):
-        if self.movedown:
-            self.rect.top += self.movespeed
+        if  self.rect.bottom + self.movespeed <= self.bound[3]:
+            self.rect.bottom += self.movespeed
+        elif self.rect.bottom + self.movespeed > self.bound[3]:
+            self.rect.bottom = self.bound[3]
 ```
 
 ### 完整代码：
@@ -130,19 +105,10 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0 ,0)
 RED = (255,0,0)
 
-left = 'left'
-up = 'up'
-right = 'right'
-down = 'down'
-
 class man(pygame.sprite.Sprite):
-    moveup = False
-    movedown = False
-    moveleft = False
-    moveright = False
     movespeed = 5
 
-    def __init__(self, bgcolor, initial_pos):
+    def __init__(self, bgcolor, initial_pos, bound):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((100, 200))
         self.image.fill(bgcolor)
@@ -154,51 +120,32 @@ class man(pygame.sprite.Sprite):
         pygame.draw.line(self.image, BLACK, (50, 100), (100, 60), 2)
         self.rect = self.image.get_rect()
         self.rect.topleft = initial_pos
-    
-    def canMove(self, direction, bound):
-        if direction == left and self.rect.left - self.movespeed > bound[0]:
-            self.moveleft = True
-            return
-        elif direction == left and self.rect.left - self.movespeed <= bound[0]:
-            self.rect.left = bound[0]
-            self.moveleft = False
-            return 
-        if direction == up and self.rect.top > bound[1]:
-            self.moveup = True
-            return
-        elif direction == up and self.rect.top - self.movespeed <= bound[1]:
-            self.rect.top = bound[1]
-            self.moveup = False
-            return     
-        if direction == down and self.rect.bottom < bound[3]:
-            self.movedown = True
-            return
-        elif direction == down and self.rect.bottom + self.movespeed >= bound[3]:
-            self.rect.bottom = bound[3]
-            self.movedown = False
-            return 
-        if direction == right and self.rect.right < bound[2]:
-            self.moveright = True
-        elif direction == right and self.rect.right + self.movespeed >= bound[0]:
-            self.rect.right = bound[2]
-            self.moveright = False
-            return 
+        self.bound = bound
+        # 表示小人移动的范围，四元列表，分别表示左边界，右边界，上边界，下边界
     
     def Moveleft(self):
-        if self.moveleft:
+        if  self.rect.left - self.movespeed >= self.bound[0]:
             self.rect.left -= self.movespeed
+        elif self.rect.left - self.movespeed < self.bound[0]:
+            self.rect.left = self.bound[0]
 
     def Moveright(self):
-        if self.moveright:
+        if self.rect.right + self.movespeed <= self.bound[1]:
             self.rect.right += self.movespeed
-
+        elif self.rect.right + self.movespeed > self.bound[1]:
+            self.rect.right = self.bound[1]
+            
     def Moveup(self):
-        if self.moveup:
+        if  self.rect.top - self.movespeed >= self.bound[2]:
             self.rect.top -= self.movespeed
+        elif self.rect.top - self.movespeed < self.bound[2]:
+            self.rect.top = self.bound[2]
 
     def Movedown(self):
-        if self.movedown:
-            self.rect.top += self.movespeed
+        if  self.rect.bottom + self.movespeed <= self.bound[3]:
+            self.rect.bottom += self.movespeed
+        elif self.rect.bottom + self.movespeed > self.bound[3]:
+            self.rect.bottom = self.bound[3]
  
 def main():
     global screen
@@ -206,45 +153,29 @@ def main():
     screen = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     screen.fill(WHITE)
     FPSCLOCK = pygame.time.Clock()
-    Man = man(WHITE, (50,100))
-    # Man.draw()
+    Man = man(WHITE, (50,100), (0, WINDOWWIDTH, 0, WINDOWHEIGHT))
     screen.blit(Man.image, Man.rect)
     pygame.display.update()
     while True:
-        checkQuit()
-        # 如果想要长按一直移动，不能根据KEYDOWN事件执行操作，那样按一次按键只能动一次，所以可以使用类中的移动状态
+        # 如果想要长按一直移动，不能根据KEYDOWN事件执行操作，那样按一次按键只能动一次
+        # 可以使用pygame中的key.get_pressed()函数
+        keys = pygame.key.get_pressed()
+
         for event in pygame.event.get():
-            if event.type == KEYDOWN:
-                if event.key == K_a:
-                    Man.canMove(left, BOUND)
-                elif event.key == K_w:
-                    Man.canMove(up, BOUND)
-                elif event.key == K_s:
-                    Man.canMove(down, BOUND)
-                elif event.key == K_d:
-                    Man.canMove(right, BOUND)
-            if event.type == KEYUP:
-                if event.key == K_a:
-                    Man.moveleft = False
-                elif event.key == K_w:
-                    Man.moveup = False
-                elif event.key == K_s:
-                    Man.movedown = False
-                elif event.key == K_d:
-                    Man.moveright = False
-                
-        if Man.moveleft:
-            Man.canMove(left, BOUND)
+            if event.type == QUIT:
+                terminate()
+
+        if keys[K_ESCAPE]:
+            terminate()
+        if keys[K_a] or keys[K_LEFT]:
             Man.Moveleft()
-        elif Man.moveright:
-            Man.canMove(right, BOUND)
+        if keys[K_d] or keys[K_RIGHT]:
             Man.Moveright()
-        if Man.moveup:
-            Man.canMove(up, BOUND)
-            Man.Moveup()
-        elif Man.movedown:
-            Man.canMove(down, BOUND)
+        if keys[K_s] or keys[K_DOWN]:
             Man.Movedown()
+        if keys[K_w] or keys[K_UP]:
+            Man.Moveup()
+                
 
         screen.fill(WHITE)
         screen.blit(Man.image, Man.rect)
@@ -254,14 +185,6 @@ def main():
 def terminate():
     pygame.quit()
     sys.exit()
-
-def checkQuit():
-    for event in pygame.event.get(QUIT):
-        terminate()
-    for event in pygame.event.get(KEYDOWN):
-        if event.key == K_ESCAPE:
-            terminate()
-        pygame.event.post(event)
 
 if  __name__ == '__main__':
     main()
