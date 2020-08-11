@@ -69,5 +69,7 @@ WHITE = (255,255,255)
 	具体原理可参考博客：
 	[python将常量集中在一个文件中、常量类的实现、sys.modules的使用](https://blog.csdn.net/u010080235/article/details/100042727?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase)
 	[Python中实现常量（Const）功能](https://blog.csdn.net/lushujuan88/article/details/43236181?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.nonecase)
-	
-	
+
+### 后续
+
+事实上，这么做的原因是防止不小心改变颜色的量，但是实际上，可以直接创建一个python文件，新建几个变量储存颜色的RGB值，在需要使用的时候，直接导入就可以了，但是使用这种方法一定要注意不能够更改变量

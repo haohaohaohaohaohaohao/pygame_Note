@@ -83,7 +83,8 @@ if __name__ == '__main__':
        screen.fill((255,255,255)) # 背景颜色白色
        while True:
            checkQuit()
-   		ReSize()
+   		Resize()
+           pygame.event.get() # 增加的获取事件的函数
            pygame.display.update()
            screen.fill((255,255,255))
            fps.tick(30)
@@ -101,7 +102,8 @@ if __name__ == '__main__':
                terminate()
            pygame.event.post(event)
    
-   def ReSize():
+   def Resize():
+       global isfullscreen, WINDOWWIDTH, WINDOWHEIGHT, screen # 添加global声明
        for event in pygame.event.get(VIDEORESIZE):
            size = WINDOWWIDTH, WINDOWHEIGHT = event.size[0], event.size[1]
            screen = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), RESIZABLE)
@@ -118,10 +120,15 @@ if __name__ == '__main__':
            pygame.event.post(event)
    
    if __name__ == '__main__':
-       main()
+    main()
    ```
-
+   
    
 
+------
 
+### 更新
 
+经过一段时间过后的查找，解决了第一个问题。发现需要对全局变量进行赋值的时候，需要进行声明，在函数中使用`global`声明`isfullscreen`等变量，这样进行赋值的时候才会改变全局变量的值，所以对上面的代码进行了一定的修改
+
+关于问题二，发现只要在`Resize()`函数后增加一行获取`event`事件的函数，或者删除`Resize()`函数中的`post()`函数，就不会有闪屏退出的情况了，证明上面的猜测是正确的的，在需要获取其他事件进行相应操作的时候可以使用`post()`函数返回获取到的`KEYDOWN`事件

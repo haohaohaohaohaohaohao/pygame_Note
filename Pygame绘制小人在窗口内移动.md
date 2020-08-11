@@ -190,6 +190,4 @@ if  __name__ == '__main__':
     main()
 ```
 
-### 效果：
-
-![效果](D:%5C%E7%94%A8%E6%88%B7%5CDesktop%5Cpython_man.gif)
+### 效果
